@@ -11,7 +11,7 @@ public class GlobalQuality : GlobalItem {
     public int quality;
     public override bool InstancePerEntity => true;
     protected override bool CloneNewInstances => true;
-    public static bool BrokenQuality = false;
+    public static bool ArmorBroken = false;
     // Assign the custom field quality to *this* item (the actual instance of an item)
     public override void SetDefaults(Item item)
     {
@@ -27,9 +27,12 @@ public class GlobalQuality : GlobalItem {
             tooltips.Add(new TooltipLine(Mod, "quality", $"Quality: {quality}%") { OverrideColor = Color.BlueViolet });
             if (IsBrokenItem(item)) {
                 if (IsArmorBroken(item)) {
-                    if (IsItemValid(item) && IsArmorBroken(item))
+                    // Set defense to zero when item has defense but is broken
+                    if (IsArmorBroken(item))
                     {
                         item.defense = 0;
+                        // Broken flag to address double "Broken" tooltip issue
+                        ArmorBroken = true;
                     }
                     tooltips.Add(new TooltipLine(Mod, "broken", "Broken") {OverrideColor = Color.Gray});
                     tooltips.Add(new TooltipLine(Mod, "NoDefense", $"{item.defense} defense") {OverrideColor = Color.Gray});
@@ -38,9 +41,16 @@ public class GlobalQuality : GlobalItem {
                     // Removing quality tooltip from broken items
                     if (lineToRemove != null || removeDefense != null)
                     {
-                    tooltips.Remove(lineToRemove);
-                    tooltips.Remove(removeDefense);
+                        tooltips.Remove(lineToRemove);
+                        tooltips.Remove(removeDefense);
                     } 
+                // Checks if Broken flag is true
+                } else if (ArmorBroken) {
+                    tooltips.Add(new TooltipLine(Mod, "broken", "Broken") {OverrideColor = Color.Gray});
+                    TooltipLine weaponRemove = tooltips.Find(line => line.Name == "quality");
+                    if (weaponRemove != null) {
+                    tooltips.Remove(weaponRemove);
+                    }
                 }
             }
         }       
