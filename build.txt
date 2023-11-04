@@ -1,0 +1,3 @@
+displayName = Quality
+author = Morgan
+version = 0.1
