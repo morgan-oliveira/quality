@@ -18,6 +18,8 @@ public class GlobalTier : GlobalItem {
     {
         item.GetGlobalItem<GlobalTier>().itemTier = itemTier;
     }
+    // ================================================================== //
+    #region TierItemCreation
     public override void OnSpawn(Item item, IEntitySource source)
     {
         tierKey = Main.rand.Next(0, tiers.Count);
@@ -26,10 +28,12 @@ public class GlobalTier : GlobalItem {
     {
         tierKey = Main.rand.Next(0, tiers.Count);
     }
-
-
+    #endregion
+    // ================================================================== //
+    #region TierTooltips
     public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
     {
+        
         if ((item.damage > 0) || (item.defense > 0)) {
                 itemTier = tiers[tierKey];
                 if (!GlobalQuality.IsBrokenItem(item)) {
@@ -37,22 +41,22 @@ public class GlobalTier : GlobalItem {
                 }
         }
     }
-
+    #endregion
+    // ================================================================== //
+    #region TierModifiers
+    
+    #endregion
+    // ================================================================== //
+    #region TierSaveData
     public override void SaveData(Item item, TagCompound tag)
     {
         tag["tierKey"] = tierKey;
-    }
-
-    public static bool IsTierD(Item item) {
-        if (item.GetGlobalItem<GlobalTier>().itemTier == "D") {
-            return true;
-        } else return false;
     }
 
     public override void LoadData(Item item, TagCompound tag)
     {
         tierKey = tag.GetInt("tierKey");
     }
-
+    #endregion
 
 }

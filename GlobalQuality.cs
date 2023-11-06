@@ -19,13 +19,23 @@ public class GlobalQuality : GlobalItem {
         if (IsItemValid(item)) {
             item.GetGlobalItem<GlobalQuality>().quality = quality;
         }
-        
+               
     }
     // ================================================================================= //
     #region ItemTooltips
     // Tooltips
     public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
     {
+        // Satanic tag
+        if (item.GetGlobalItem<GlobalQuality>().quality >= 90 && item.GetGlobalItem<GlobalTier>().itemTier == "S") {
+            tooltips.Add(new TooltipLine(Mod, "satanic", "[satanic]") { OverrideColor = Color.Red });
+        } // Heroic tag
+        if (item.GetGlobalItem<GlobalQuality>().quality >= 90 && item.GetGlobalItem<GlobalTier>().itemTier == "SS") {
+            tooltips.Add(new TooltipLine(Mod, "heroic", "[heroic]") { OverrideColor = Color.LightSeaGreen });
+        } // Angelic tag
+        if (item.GetGlobalItem<GlobalQuality>().quality >= 90 && item.GetGlobalItem<GlobalTier>().itemTier == "SSS") {
+            tooltips.Add(new TooltipLine(Mod, "angelic", "[angelic]") { OverrideColor = Color.LightYellow });
+        } 
         if (IsItemValid(item)) { 
             tooltips.Add(new TooltipLine(Mod, "quality", $"Quality: {quality}%") { OverrideColor = Color.BlueViolet });
             if (IsBrokenItem(item)) {
@@ -99,6 +109,64 @@ public class GlobalQuality : GlobalItem {
     }
     #endregion
     // ============================================================================ //
+    #region QualityModifiers
+    public override void ModifyWeaponDamage(Item item, Player player, ref StatModifier damage)
+    {
+        if (quality >= 60 && quality <= 65) { // +20% damage 
+            item.damage = (int)(item.damage * 1.2f);
+        }
+        if (quality >= 66 && quality <= 70) { // +30% damage  
+            item.damage = (int)(item.damage * 1.3f);
+        }        
+        if (quality >= 71 && quality <= 75) { // +40% damage  
+            item.damage = (int)(item.damage * 1.4f);
+        }
+        if (quality >= 76 && quality <= 80) { // +50% damage  
+            item.damage = (int)(item.damage * 1.5f);
+        }
+        if (quality >= 81 && quality <= 85) { // +70% damage  
+            item.damage = (int)(item.damage * 1.7f);
+        }
+        if (quality >= 86 && quality <= 90) { // +90% damage  
+            item.damage = (int)(item.damage * 1.9f);
+        }
+        if (quality >= 91 && quality <= 95) { // +130% damage  
+            item.damage = (int)(item.damage * 2.3f);
+        }
+        if (quality >= 96 && quality <= 99) { // + 180% damage 
+            item.damage = (int)(item.damage * 2.8f);
+        }
+        if (quality == 100) { // +250% damage
+            item.damage =(int)(item.damage * 3.5f);
+        }              
+    }
+    public void ModifyDefense(Item item) {
+        if (item.defense > 0) {
+            if (item.GetGlobalItem<GlobalQuality>().quality >= 40 && item.GetGlobalItem<GlobalQuality>().quality <= 50) {
+                item.defense += 1;
+            } else if (item.GetGlobalItem<GlobalQuality>().quality >= 51 && item.GetGlobalItem<GlobalQuality>().quality <= 60) {
+                item.defense += 2;
+            } else if (item.GetGlobalItem<GlobalQuality>().quality >= 61 && item.GetGlobalItem<GlobalQuality>().quality <= 70) {
+                item.defense += 3;
+            } else if (item.GetGlobalItem<GlobalQuality>().quality >= 71 && item.GetGlobalItem<GlobalQuality>().quality <= 75) {
+                item.defense += 4;
+            } else if (item.GetGlobalItem<GlobalQuality>().quality >= 76 && item.GetGlobalItem<GlobalQuality>().quality <= 80) {
+                item.defense += 5;
+            } else if (item.GetGlobalItem<GlobalQuality>().quality >= 81 && item.GetGlobalItem<GlobalQuality>().quality <= 85) {
+                item.defense += 6;
+            } else if (item.GetGlobalItem<GlobalQuality>().quality >= 86 && item.GetGlobalItem<GlobalQuality>().quality <= 90) {
+                item.defense += 7;
+            } else if (item.GetGlobalItem<GlobalQuality>().quality >= 91 && item.GetGlobalItem<GlobalQuality>().quality <= 95) {
+                item.defense += 8;
+            } else if (item.GetGlobalItem<GlobalQuality>().quality >= 96 && item.GetGlobalItem<GlobalQuality>().quality <= 99) {
+                item.defense += 9;
+            } else if (item.GetGlobalItem<GlobalQuality>().quality == 100) {
+                item.defense += 15; 
+            }
+        }        
+    }
+    #endregion
+    // ============================================================================ //
     #region ItemRestriction
     // Cannot use item if broken
     public override bool CanUseItem(Item item, Player player)
@@ -142,16 +210,18 @@ public class GlobalQuality : GlobalItem {
     // ====================================================================== //
     #region ItemCreation
 
-    // Assign random quality during item spawn (chests/drop/bags)
+    // Assign random quality + attributes during item spawn (chests/drop/bags)
     public override void OnSpawn(Item item, IEntitySource source)
     {
         RollQuality(item);
+        ModifyDefense(item);
         //ArmorPenalty(item);
     }
-    // Assign random quality during creation (craft)
+    // Assign random quality + attributes during creation (craft)
     public override void OnCreate(Item item, ItemCreationContext context)
     {
         RollQuality(item);
+        ModifyDefense(item);
         //ArmorPenalty(item);
     }
 
@@ -170,4 +240,3 @@ public class GlobalQuality : GlobalItem {
     }
     #endregion
 }
- 
