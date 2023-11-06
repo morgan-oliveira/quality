@@ -110,7 +110,7 @@ public class GlobalQuality : GlobalItem {
     #endregion
     // ============================================================================ //
     #region QualityModifiers
-    public override void ModifyWeaponDamage(Item item, Player player, ref StatModifier damage)
+    public void QualityWeaponBuff(Item item)
     {
         if (quality >= 60 && quality <= 65) { // +20% damage 
             item.damage = (int)(item.damage * 1.2f);
@@ -137,7 +137,7 @@ public class GlobalQuality : GlobalItem {
             item.damage = (int)(item.damage * 2.8f);
         }
         if (quality == 100) { // +250% damage
-            item.damage =(int)(item.damage * 3.5f);
+            item.damage = (int)(item.damage * 3.5f);
         }              
     }
     public void ModifyDefense(Item item) {
@@ -214,6 +214,7 @@ public class GlobalQuality : GlobalItem {
     public override void OnSpawn(Item item, IEntitySource source)
     {
         RollQuality(item);
+        QualityWeaponBuff(item);
         ModifyDefense(item);
         //ArmorPenalty(item);
     }
@@ -221,6 +222,7 @@ public class GlobalQuality : GlobalItem {
     public override void OnCreate(Item item, ItemCreationContext context)
     {
         RollQuality(item);
+        QualityWeaponBuff(item);
         ModifyDefense(item);
         //ArmorPenalty(item);
     }
