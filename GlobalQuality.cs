@@ -6,6 +6,7 @@ using Terraria.ModLoader.IO;
 using Terraria.DataStructures;
 using Microsoft.Xna.Framework.Graphics;
 using Humanizer;
+using System.IO;
 
 public class GlobalQuality : GlobalItem {
     public int quality;
@@ -26,16 +27,6 @@ public class GlobalQuality : GlobalItem {
     // Tooltips
     public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
     {
-        // Satanic tag
-        if (item.GetGlobalItem<GlobalQuality>().quality >= 90 && item.GetGlobalItem<GlobalTier>().itemTier == "S") {
-            tooltips.Add(new TooltipLine(Mod, "satanic", "[satanic]") { OverrideColor = Color.Red });
-        } // Heroic tag
-        if (item.GetGlobalItem<GlobalQuality>().quality >= 90 && item.GetGlobalItem<GlobalTier>().itemTier == "SS") {
-            tooltips.Add(new TooltipLine(Mod, "heroic", "[heroic]") { OverrideColor = Color.LightSeaGreen });
-        } // Angelic tag
-        if (item.GetGlobalItem<GlobalQuality>().quality >= 90 && item.GetGlobalItem<GlobalTier>().itemTier == "SSS") {
-            tooltips.Add(new TooltipLine(Mod, "angelic", "[angelic]") { OverrideColor = Color.LightYellow });
-        } 
         if (IsItemValid(item)) { 
             tooltips.Add(new TooltipLine(Mod, "quality", $"Quality: {quality}%") { OverrideColor = Color.BlueViolet });
             if (IsBrokenItem(item)) {
