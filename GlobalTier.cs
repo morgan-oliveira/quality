@@ -67,10 +67,6 @@ public class GlobalTier : GlobalItem {
                     tooltips.Add(new TooltipLine(Mod, "itemTier", $"Tier: {itemTier}") {OverrideColor = Color.Gold});
                 }
         }
-        if (item.GetGlobalItem<GlobalTier>().hasFireSkill) {
-            skillLevel = levels[skillKey];
-            tooltips.Add(new TooltipLine(Mod, "FireSkillLevelOne", $"[Fire {skillLevel}]"){OverrideColor = Color.OrangeRed});
-        }
         if (item.GetGlobalItem<GlobalTier>().itemTier == "S" && item.GetGlobalItem<GlobalQuality>().quality > 90) {
             tooltips.Add(new TooltipLine(Mod, "satanicToolTip", "[satanic]") {OverrideColor = Color.Red});
             haveSatanicTag = true;
