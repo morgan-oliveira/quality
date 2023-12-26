@@ -4,7 +4,8 @@ using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace quality.Itens;
-public class TierBag : ModItem {
+public class TierBag : ModItem
+{
 
     public override void SetDefaults()
     {

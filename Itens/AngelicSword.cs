@@ -5,7 +5,8 @@ using Terraria.ModLoader;
 
 namespace quality.Itens;
 
-public class AngelicSword : ModItem {
+public class AngelicSword : ModItem
+{
     public override void SetDefaults()
     {
         Item.height = 40;
@@ -20,5 +21,5 @@ public class AngelicSword : ModItem {
         Item.GetGlobalItem<GlobalQuality>().quality = 99;
         Item.stack = 1;
     }
-    
+
 }
