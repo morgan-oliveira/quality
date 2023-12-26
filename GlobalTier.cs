@@ -17,6 +17,7 @@ public class GlobalTier : GlobalItem
     public List<String> tiers = new List<String>() { "D", "C", "B", "A", "S", "SS", "SSS" };
     public String itemTier;
     int tierKey;
+    public bool InventoryTierUpdate = false;
     // ================================================================== //
     public bool haveSatanicTag;
     public bool haveHeroicTag;
@@ -38,6 +39,14 @@ public class GlobalTier : GlobalItem
         //tierKey = Main.rand.Next(0, tiers.Count);
         TierRoll(item);
     }
+    public override void UpdateInventory(Item item, Player player)
+    {
+        if (!InventoryTierUpdate)
+        {
+            InventoryTierUpdate = true;
+            TierRoll(item);
+        }
+    }
     #endregion
     // ================================================================== //
     #region TierTooltips
@@ -46,7 +55,6 @@ public class GlobalTier : GlobalItem
 
         if ((item.damage > 0) || (item.defense > 0))
         {
-            itemTier = tiers[tierKey];
             if (!GlobalQuality.IsBrokenItem(item))
             {
                 tooltips.Add(new TooltipLine(Mod, "itemTier", $"Tier: {itemTier}") { OverrideColor = Color.Gold });
@@ -78,7 +86,7 @@ public class GlobalTier : GlobalItem
         {
             item.GetGlobalItem<GlobalTier>().itemTier = "D";
             // Makes sure there are no more D tier items in hardmode
-            if (Main.hardMode)
+            if (Main.hardMode || GlobalNPCBuff.NightmareMode || GlobalNPCBuff.InfernoMode)
             {
                 item.GetGlobalItem<GlobalTier>().itemTier = "C";
             }
@@ -114,6 +122,8 @@ public class GlobalTier : GlobalItem
     public override void SaveData(Item item, TagCompound tag)
     {
         tag["tierKey"] = tierKey;
+        tag["itemTier"] = itemTier;
+        tag["InventoryTierUpdate"] = InventoryTierUpdate;
     }
     public override void NetSend(Item item, BinaryWriter writer)
     {
@@ -130,6 +140,8 @@ public class GlobalTier : GlobalItem
     public override void LoadData(Item item, TagCompound tag)
     {
         tierKey = tag.GetInt("tierKey");
+        itemTier = tag.GetString("itemTier");
+        InventoryTierUpdate = tag.GetBool("InventoryTierUpdate");
     }
     #endregion
 

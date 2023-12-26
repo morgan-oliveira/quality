@@ -299,7 +299,6 @@ public class GlobalQuality : GlobalItem
         ModifyDefense(item);
         //ArmorPenalty(item);
         // Saving data
-        SaveData(item, new TagCompound());
     }
     // Assign random quality + attributes during creation (craft)
     public override void OnCreate(Item item, ItemCreationContext context)
@@ -309,19 +308,21 @@ public class GlobalQuality : GlobalItem
         //ModifyDefense(item);
         //ArmorPenalty(item);
     }
+    // This hook only exists to allow me to grab items directly from a cheat mod during development. 
+    // It is NOT needed for the quality system to work as intended.
+    // Its existence breaks my save tag, because it keeps updating the quality values.
+    //[UPDATE] Actually managed to keep this as a feature!
     public override void UpdateInventory(Item item, Player player)
     {
         if (!UpdateInventoryQuality)
         {
+            UpdateInventoryQuality = true;
             RollQuality(item);
             QualityWeaponBuff(item);
             ModifyDefense(item);
-            UpdateInventoryQuality = true;
             // Saving data
-            SaveData(item, new TagCompound());
         }
     }
-
     #endregion
     // ========================================================================= //
     #region DataSave
@@ -329,11 +330,13 @@ public class GlobalQuality : GlobalItem
     public override void SaveData(Item item, TagCompound tag)
     {
         tag["quality"] = quality;
+        tag["UpdateInventoryQuality"] = UpdateInventoryQuality;
     }
     // Loading quality data with TagCompound object
     public override void LoadData(Item item, TagCompound tag)
     {
         quality = tag.GetInt("quality");
+        UpdateInventoryQuality = tag.GetBool("UpdateInventoryQuality");
     }
     #endregion
 }
