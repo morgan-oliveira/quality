@@ -11,6 +11,7 @@ using System.IO;
 public class GlobalQuality : GlobalItem
 {
     public int quality;
+    public bool manualQuality = false;
     public override bool InstancePerEntity => true;
     protected override bool CloneNewInstances => true;
     public static bool ArmorBroken = false;
@@ -22,6 +23,7 @@ public class GlobalQuality : GlobalItem
         if (IsItemValid(item))
         {
             item.GetGlobalItem<GlobalQuality>().quality = quality;
+            item.GetGlobalItem<GlobalQuality>().manualQuality = manualQuality;
         }
 
     }
@@ -87,11 +89,11 @@ public class GlobalQuality : GlobalItem
             quality = Main.rand.Next(61, 65 + 1); // 30% chance of getting item quality in 60-65 range, inclusive
             if (GlobalNPCBuff.NightmareMode)
             {
-                quality = Main.rand.Next(71, 75 + 1);
+                quality = Main.rand.Next(71, 75 + 1); // In nightmare mode, 30% chance of gettingg 71-75% quality
             }
             else if (GlobalNPCBuff.InfernoMode)
             {
-                quality = Main.rand.Next(75, 80 + 1);
+                quality = Main.rand.Next(75, 80 + 1); // In Inferno mode, 30% chance of getting 75-80% quality
             }
         }
         if (ItemRoll <= 0.2f)
@@ -111,7 +113,7 @@ public class GlobalQuality : GlobalItem
             quality = Main.rand.Next(81, 85 + 1); // 0.5% chance of getting item quality in 80-85 range, inclusive
             if (GlobalNPCBuff.NightmareMode)
             {
-                quality = Main.rand.Next(85, 90 + 1);
+                quality = Main.rand.Next(85, 90 + 1); // In nightmare mode, chance of getting 81-85% quality is 0.5%
             }
             else if (GlobalNPCBuff.InfernoMode)
             {
@@ -294,9 +296,12 @@ public class GlobalQuality : GlobalItem
     // Assign random quality + attributes during item spawn (chests/drop/bags)
     public override void OnSpawn(Item item, IEntitySource source)
     {
-        RollQuality(item);
-        QualityWeaponBuff(item);
-        ModifyDefense(item);
+        if (!item.GetGlobalItem<GlobalQuality>().manualQuality)
+        {
+            RollQuality(item);
+            QualityWeaponBuff(item);
+            ModifyDefense(item);
+        }
         //ArmorPenalty(item);
         // Saving data
     }
@@ -308,13 +313,13 @@ public class GlobalQuality : GlobalItem
         //ModifyDefense(item);
         //ArmorPenalty(item);
     }
-    // This hook only exists to allow me to grab items directly from a cheat mod during development. 
+    // This hook only exists to allow me to grab modified items directly from a cheat mod during development. 
     // It is NOT needed for the quality system to work as intended.
     // Its existence breaks my save tag, because it keeps updating the quality values.
     //[UPDATE] Actually managed to keep this as a feature!
     public override void UpdateInventory(Item item, Player player)
     {
-        if (!UpdateInventoryQuality)
+        if (!UpdateInventoryQuality && !item.GetGlobalItem<GlobalQuality>().manualQuality)
         {
             UpdateInventoryQuality = true;
             RollQuality(item);

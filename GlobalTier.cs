@@ -1,14 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Terraria.DataStructures;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using Terraria.ID;
-using IL.Terraria.GameContent.UI.Chat;
-using Microsoft.CodeAnalysis.Operations;
 using System.IO;
 public class GlobalTier : GlobalItem
 {
@@ -103,15 +99,23 @@ public class GlobalTier : GlobalItem
         {
             item.GetGlobalItem<GlobalTier>().itemTier = "A";
         }
-        if (TierRoll < 0.1f && Main.hardMode)
+        if (TierRoll < 0.01f && Main.hardMode)
         {
             item.GetGlobalItem<GlobalTier>().itemTier = "S";
+            if (GlobalNPCBuff.NightmareMode)
+            {
+                item.GetGlobalItem<GlobalTier>().itemTier = "SS";
+            }
+            else if (GlobalNPCBuff.InfernoMode)
+            {
+                item.GetGlobalItem<GlobalTier>().itemTier = "SSS";
+            }
         }
-        if (TierRoll < 0.01f && Main.hardMode)
+        if (TierRoll < 0.001f && Main.hardMode)
         {
             item.GetGlobalItem<GlobalTier>().itemTier = "SS";
         }
-        if (TierRoll < 0.001f && Main.hardMode)
+        if (TierRoll < 0.0001f && Main.hardMode)
         {
             item.GetGlobalItem<GlobalTier>().itemTier = "SSS";
         }
